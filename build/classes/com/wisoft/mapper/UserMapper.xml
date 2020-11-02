@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wisoft.mapper.UserMapper" >
+  <resultMap id="BaseResultMap" type="com.wisoft.pojo.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="userid" property="userid" jdbcType="VARCHAR" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="isadmin" property="isadmin" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userid, password, username, isadmin
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.wisoft.pojo.User" >
+    insert into user (id, userid, password, 
+      username, isadmin)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{username,jdbcType=VARCHAR}, #{isadmin,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wisoft.pojo.User" >
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="isadmin != null" >
+        isadmin
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="isadmin != null" >
+        #{isadmin,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wisoft.pojo.User" >
+    update user
+    <set >
+      <if test="userid != null" >
+        userid = #{userid,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="isadmin != null" >
+        isadmin = #{isadmin,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wisoft.pojo.User" >
+    update user
+    set userid = #{userid,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      username = #{username,jdbcType=VARCHAR},
+      isadmin = #{isadmin,jdbcType=INTEGER},
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  
+    <!--前后台通用登录  -->
+  <select id="login" resultType="User">
+  	select * from user where userid=#{userid} and password=#{password} and isadmin=#{isadmin}
+  </select>
+  
+  <!--后台列表显示  -->
+  <select id="selectAllUser" resultType="User">
+  	select * from user where isadmin=0  
+  	<if test="username != null and username != '' ">
+  		and  username  like  '%${username}%'
+  	</if>
+  	<if test="id != null and id != '' ">
+  		and id=#{id}
+  	</if>
+  	limit #{pageBean.pageOne},#{pageBean.pageSize}
+  </select>
+  <!--在线人数  -->
+   <!--  <select id="selectAllUserZX" resultType="User">
+  	select * from db_user where isdel=0 and type=1  and status=1 
+  	<if test="realname != null and realname != '' ">
+  		and  realname  like  '%${realname}%'
+  	</if>
+  	limit #{pageBean.pageOne},#{pageBean.pageSize}
+  </select> -->
+  <!--后台返回用户数量  -->
+  <select id="selectAllCount" resultType="User">
+  	select * from user where isadmin=0 
+  </select> 
+</mapper>

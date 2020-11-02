@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+               http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+               http://www.springframework.org/schema/context
+               http://www.springframework.org/schema/context/spring-context-4.0.xsd
+               http://www.springframework.org/schema/mvc
+               http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
+     <!-- 开启注解 -->
+     <context:component-scan base-package="com.wisoft.controller"/>
+     
+     <!-- 配置一个自定义转换器 -->
+     <!-- <bean id="conversionService"
+     	 class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
+     	<property name="converters">
+     		<list>
+     			<bean class="cn.util.DateConverter"/>
+     		</list>
+     	</property>
+     </bean> -->
+     
+     <mvc:annotation-driven/>
+     
+     <!-- 自动注册RequestMappingHandlerMapping和RequestMappingHandlerAdapter -->
+     <!-- <mvc:annotation-driven conversion-service="conversionService">
+    	<mvc:message-converters>
+    		引用json转换器
+    		<ref bean="fastJsonHttpMessageConverter"/>
+    	</mvc:message-converters>
+     </mvc:annotation-driven> -->
+    
+     <!-- 处理静态资源 -->
+     <mvc:default-servlet-handler/>
+     
+     <!-- 视图解析器 -->
+     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+     	<!-- 配置jsp路径的前缀 -->
+     	<property name="prefix" value="/"/>
+     	<property name="suffix" value=".jsp"/>
+     </bean>
+     
+     <!-- 文件解析器 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="uploadTempDir" value="/upload"></property>
+		<property name="maxUploadSize" value="5000000"></property>
+		<property name="defaultEncoding" value="utf-8"></property>
+	</bean>
+	
+     <!-- 定义JSON的转换器，指定返回的媒体类型 -->
+	<bean id="fastJsonHttpMessageConverter"
+		class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+		<property name="supportedMediaTypes" value="application/json;charset=UTF-8"></property>
+	</bean>
+	
+	<!-- 配置一个拦截器 -->
+<!-- 	<mvc:interceptors>
+		<mvc:interceptor>
+			拦截所有文件夹及里面的子文件
+			<mvc:mapping path="/**"/>
+			那些请求不拦截
+ 			<mvc:exclude-mapping path="/**/login"/>
+			<mvc:exclude-mapping path="/**/login.*"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/backer/**"/>
+            <mvc:exclude-mapping path="/css/**"/>
+            <mvc:exclude-mapping path="/images/**"/>
+            <mvc:exclude-mapping path="/assets/**"/>
+            <mvc:exclude-mapping path="/calendar/**"/>
+            <mvc:exclude-mapping path="/student/**"/>
+            <mvc:exclude-mapping path="/scripts/**"/>
+            <mvc:exclude-mapping path="/style/**"/>
+            <mvc:exclude-mapping path="/pdfwendang/**"/>
+            <mvc:exclude-mapping path="/video/**"/>
+            <mvc:exclude-mapping path="/scripts/**"/>
+			<mvc:exclude-mapping path="/user/login"/>
+			<bean class="cn.os.util.CommoInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+</beans>     
